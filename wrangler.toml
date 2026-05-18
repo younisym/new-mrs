@@ -1,0 +1,19 @@
+# Cloudflare Workers — Static Assets deployment for a fully static Next.js site.
+# No Worker code (no `main` field) — Cloudflare serves files in ./out directly.
+#
+# `name` is overridden by the Workers project in the Cloudflare dashboard
+# when deploying via Git, so it's only used for local `wrangler deploy`.
+name = "luxe-estates"
+compatibility_date = "2024-11-06"
+compatibility_flags = ["nodejs_compat"]
+
+# Runs `next build` (output: 'export' → emits ./out) before wrangler deploy.
+# This means `npx wrangler deploy` works end-to-end, even when Cloudflare's
+# dashboard "Build command" field is empty.
+[build]
+command = "npm install && npm run build"
+
+[assets]
+directory = "./out"
+# Serve /404.html when no static file matches (Next.js emits this).
+not_found_handling = "404-page"
